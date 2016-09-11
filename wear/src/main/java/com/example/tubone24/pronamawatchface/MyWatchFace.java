@@ -73,8 +73,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
         Bitmap mBackgroundScaledBitmap;
 
         final int[] BACKGROUND_RES_ID = {
-                R.drawable.img01,
-                R.drawable.img02,
                 R.drawable.img03,
                 R.drawable.img04,
                 R.drawable.img05,
@@ -86,6 +84,30 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 R.drawable.img11,
                 R.drawable.img12,
                 R.drawable.img13,
+                R.drawable.img14,
+                R.drawable.img15,
+                R.drawable.img16,
+                R.drawable.img17,
+                R.drawable.img18,
+                R.drawable.img19,
+                R.drawable.img20,
+                R.drawable.img21,
+                R.drawable.img22,
+                R.drawable.img23,
+                R.drawable.img24,
+                R.drawable.img25,
+                R.drawable.img26,
+                R.drawable.img27,
+                R.drawable.img28,
+                R.drawable.img29,
+                R.drawable.img30,
+                R.drawable.img31,
+                R.drawable.img32,
+                R.drawable.img33,
+                R.drawable.img34,
+                R.drawable.img35,
+                R.drawable.img36,
+                R.drawable.img37
         };
 
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
@@ -239,22 +261,33 @@ public class MyWatchFace extends CanvasWatchFaceService {
             Resources resources = MyWatchFace.this.getResources();
             int imgResId;
             if (isInAmbientMode()) {
-                imgResId = R.drawable.logo3;
+                imgResId = R.drawable.club;
             } else {
-                imgResId = BACKGROUND_RES_ID[mTime.minute % BACKGROUND_RES_ID.length];
+                if (mTime.hour == 7){
+                    imgResId = R.drawable.img01;
+                }else{
+                    if (mTime.hour == 23){
+                        imgResId = R.drawable.img02;
+                    }else {
+                        imgResId = BACKGROUND_RES_ID[mTime.minute % BACKGROUND_RES_ID.length];
+                    }
+                }
+
             }
             Drawable backgroundDrawable = resources.getDrawable(imgResId);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
             mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
-                    bounds.width(), bounds.height(), true /* filter */);
-            canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
+                    (int)(bounds.width() * 0.6),(int)(bounds.height() * 0.6),true /* filter */);
+            canvas.drawBitmap(mBackgroundScaledBitmap, bounds.width() / 3, bounds.height() /3, null);
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             mTime.setToNow();
             String text = mAmbient
                     ? String.format("%d:%02d", mTime.hour, mTime.minute)
                     : String.format("%d:%02d:%02d", mTime.hour, mTime.minute, mTime.second);
-            canvas.drawText(text, mXOffset + 50, mYOffset + 200, mTextPaint);
+            Typeface font = Typeface.createFromAsset(getAssets(), "HomemadeApple.ttf");
+            mTextPaint.setTypeface(font);
+            canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
         }
 
         /**
