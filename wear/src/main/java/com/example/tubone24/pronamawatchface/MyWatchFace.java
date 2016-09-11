@@ -21,11 +21,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -64,7 +67,23 @@ public class MyWatchFace extends CanvasWatchFaceService {
     }
 
     private class Engine extends CanvasWatchFaceService.Engine {
+
         final Handler mUpdateTimeHandler = new EngineHandler(this);
+        Bitmap mBackgroundBitmap;
+        Bitmap mBackgroundScaledBitmap;
+
+        final int[] BACKGROUND_RES_ID = {
+                R.drawable.img01,
+                R.drawable.img02,
+                R.drawable.img03,
+                R.drawable.img04,
+                R.drawable.img05,
+                R.drawable.img06,
+                R.drawable.img07,
+                R.drawable.img08,
+                R.drawable.img09,
+                R.drawable.img10,
+        };
 
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
@@ -210,15 +229,28 @@ public class MyWatchFace extends CanvasWatchFaceService {
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
             } else {
-                canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
+                canvas.drawColor(Color.rgb(128,203,0));
             }
+
+            Resources resources = MyWatchFace.this.getResources();
+            int imgResId;
+            if (isInAmbientMode()) {
+                imgResId = R.drawable.logo3;
+            } else {
+                imgResId = BACKGROUND_RES_ID[mTime.minute % BACKGROUND_RES_ID.length];
+            }
+            Drawable backgroundDrawable = resources.getDrawable(imgResId);
+            mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
+            mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
+                    bounds.width(), bounds.height(), true /* filter */);
+            canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             mTime.setToNow();
             String text = mAmbient
                     ? String.format("%d:%02d", mTime.hour, mTime.minute)
                     : String.format("%d:%02d:%02d", mTime.hour, mTime.minute, mTime.second);
-            canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
+            canvas.drawText(text, mXOffset + 50, mYOffset + 200, mTextPaint);
         }
 
         /**
