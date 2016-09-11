@@ -83,6 +83,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 R.drawable.img08,
                 R.drawable.img09,
                 R.drawable.img10,
+                R.drawable.img11,
+                R.drawable.img12,
+                R.drawable.img13,
         };
 
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
@@ -229,7 +232,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
             } else {
-                canvas.drawColor(Color.rgb(128,203,0));
+                // canvas.drawColor(Color.rgb(128,203,0));
+                canvas.drawColor(Color.BLACK);
             }
 
             Resources resources = MyWatchFace.this.getResources();
